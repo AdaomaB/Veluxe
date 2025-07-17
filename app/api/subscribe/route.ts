@@ -1,36 +1,27 @@
-// app/api/subscribe/route.ts
 import { NextResponse } from "next/server"
-import type { NewsletterSubscription } from "@/lib/types"
 
-// In-memory storage for subscribed emails.
-// NOTE: This array will reset every time the server restarts (e.g., on code changes or deployment).
-// For a production application, you would use a persistent database.
-const subscribedEmails: NewsletterSubscription[] = []
+// In-memory storage for demonstration purposes
+const subscribers: string[] = []
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const { email } = await request.json()
+    const { email } = await req.json()
 
     if (!email || typeof email !== "string" || !email.includes("@")) {
       return NextResponse.json({ message: "Invalid email address" }, { status: 400 })
     }
 
-    if (subscribedEmails.some((sub) => sub.email === email)) {
+    if (subscribers.includes(email)) {
       return NextResponse.json({ message: "Email already subscribed" }, { status: 409 })
     }
 
-    const newSubscription: NewsletterSubscription = {
-      email,
-      timestamp: new Date().toISOString(),
-    }
-    subscribedEmails.push(newSubscription)
-
-    console.log("New subscription:", newSubscription)
-    console.log("Current subscribers:", subscribedEmails)
+    subscribers.push(email)
+    console.log("New subscriber:", email)
+    console.log("Current subscribers:", subscribers)
 
     return NextResponse.json({ message: "Subscription successful!" }, { status: 200 })
   } catch (error) {
-    console.error("Error subscribing email:", error)
-    return NextResponse.json({ message: "Failed to subscribe email" }, { status: 500 })
+    console.error("Error subscribing:", error)
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
   }
 }

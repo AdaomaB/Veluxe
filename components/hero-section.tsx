@@ -1,36 +1,40 @@
-// components/hero-section.tsx
-import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export default function HeroSection() {
   return (
-    <section
-      id="home"
-      className="relative w-full h-[60vh] md:h-[80vh] flex items-center justify-center text-center overflow-hidden"
-    >
+    <section className="relative w-full h-[600px] md:h-[700px] lg:h-[800px] overflow-hidden">
       <Image
-        src="/images/spring-dresses-hero.png" // Updated image path
-        alt="Little girl running with shopping bags, promoting spring dresses"
-        layout="fill"
-        objectFit="cover"
-        quality={90}
-        className="absolute inset-0 z-0 brightness-75" // Slightly darken for text readability
+        alt="Hero Background"
+        className="absolute inset-0 object-cover w-full h-full"
+        height={1080}
+        src="/placeholder.jpg"
+        style={{
+          aspectRatio: "1920/1080",
+          objectFit: "cover",
+        }}
+        width={1920}
       />
-      <div className="relative z-10 text-white px-4 space-y-6">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight drop-shadow-lg text-pink-500 md:text-pink-600">
-          SPRING DRESSES
-          <br />
-          <span className="text-white">UNDER $50</span> {/* Adjusted text and color */}
-        </h1>
-        <p className="text-lg md:text-xl max-w-2xl mx-auto drop-shadow-md text-white">
-          Discover the perfect style for the season.
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4 md:px-6">
+        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">Veluxe Threads</h1>
+        <p className="mt-4 max-w-[700px] text-lg md:text-xl">
+          Elevate your style with our exquisite collection of fashion-forward apparel.
         </p>
-        <Link href="#products">
-          <Button size="lg" className="bg-white text-pink-600 hover:bg-gray-200 transition-colors font-bold">
-            SHOP NOW {/* Adjusted button text and color */}
-          </Button>
-        </Link>
+        <div className="mt-8 flex gap-4">
+          <Link href="#products">
+            <Button className="bg-white text-black hover:bg-gray-200">Shop Now</Button>
+          </Link>
+          <Link href="#newsletter">
+            <Button
+              className="border border-white text-white hover:bg-white hover:text-black bg-transparent"
+              variant="outline"
+            >
+              Join Newsletter
+            </Button>
+          </Link>
+        </div>
       </div>
     </section>
   )

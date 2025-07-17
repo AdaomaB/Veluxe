@@ -1,30 +1,25 @@
-// components/newsletter-signup.tsx
 "use client"
 
 import type React from "react"
 
 import { useState } from "react"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast" // Assuming useToast is available
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    setIsLoading(true)
 
     try {
-      // For client-side fetches to internal Next.js API routes,
-      // a relative path is generally more robust.
-      const apiUrl = "/api/subscribe/" // Using a relative path with trailing slash
-
-      console.log(`Attempting to POST to: ${apiUrl}`) // Log the URL being used
-
-      const response = await fetch(apiUrl, {
+      const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,18 +27,16 @@ export default function NewsletterSignup() {
         body: JSON.stringify({ email }),
       })
 
-      const data = await response.json()
+      const data = await res.json()
 
-      if (response.ok) {
+      if (res.ok) {
         toast({
           title: "Success!",
           description: data.message,
           variant: "default",
         })
-        setEmail("") // Clear email on success
+        setEmail("")
       } else {
-        // Log detailed error information if the response is not OK
-        console.error(`API response not OK: ${response.status} ${response.statusText}`, data)
         toast({
           title: "Error",
           description: data.message || "Something went wrong.",
@@ -51,39 +44,47 @@ export default function NewsletterSignup() {
         })
       }
     } catch (error) {
-      console.error("Subscription fetch error:", error) // More specific error message
+      console.error("Failed to subscribe:", error)
       toast({
         title: "Error",
-        description: "Failed to connect to the server. Please try again.",
+        description: "Could not connect to the server. Please try again later.",
         variant: "destructive",
       })
     } finally {
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
   return (
-    <section id="subscribe" className="py-12 md:py-20 bg-gray-100">
-      <div className="container px-4 md:px-6 text-center space-y-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Subscribe to Our Newsletter</h2>
-        <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-          Stay updated with our latest collections, exclusive offers, and fashion tips.
-        </p>
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            className="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={loading}
-          />
-          <Button type="submit" className="px-6 py-2" disabled={loading}>
-            {loading ? "Subscribing..." : "Subscribe"}
-          </Button>
-        </form>
-        <p className="text-sm text-gray-500">We respect your privacy. You can unsubscribe at any time.</p>
+    <section id="newsletter" className="py-12 md:py-24 lg:py-32">
+      <div className="container px-4 md:px-6 flex justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold">Join Our Newsletter</CardTitle>
+            <CardDescription>
+              Stay up-to-date with the latest collections, exclusive offers, and fashion tips.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Subscribing..." : "Subscribe"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </section>
   )
