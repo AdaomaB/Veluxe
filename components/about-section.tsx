@@ -19,7 +19,7 @@ export default function AboutSection() {
         </div>
         <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden shadow-lg">
           <Image
-            src="/placeholder.svg?height=600&width=800"
+            src="/images/about-team.png" // Updated image path
             alt="About Veluxe Threads"
             layout="fill"
             objectFit="cover"

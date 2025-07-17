@@ -18,9 +18,11 @@ export default function NewsletterSignup() {
     setLoading(true)
 
     try {
-      // Use NEXT_PUBLIC_VERCEL_URL for the base URL, falling back to localhost for development
-      const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3000"
-      const apiUrl = `${baseUrl}/api/subscribe/` // Added trailing slash here
+      // For client-side fetches to internal Next.js API routes,
+      // a relative path is generally more robust.
+      const apiUrl = "/api/subscribe/" // Using a relative path with trailing slash
+
+      console.log(`Attempting to POST to: ${apiUrl}`) // Log the URL being used
 
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -40,6 +42,8 @@ export default function NewsletterSignup() {
         })
         setEmail("") // Clear email on success
       } else {
+        // Log detailed error information if the response is not OK
+        console.error(`API response not OK: ${response.status} ${response.statusText}`, data)
         toast({
           title: "Error",
           description: data.message || "Something went wrong.",
@@ -47,10 +51,10 @@ export default function NewsletterSignup() {
         })
       }
     } catch (error) {
-      console.error("Subscription error:", error)
+      console.error("Subscription fetch error:", error) // More specific error message
       toast({
         title: "Error",
-        description: "Failed to connect to the server.",
+        description: "Failed to connect to the server. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -61,7 +65,7 @@ export default function NewsletterSignup() {
   return (
     <section id="subscribe" className="py-12 md:py-20 bg-gray-100">
       <div className="container px-4 md:px-6 text-center space-y-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Join Our Newsletter</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Subscribe to Our Newsletter</h2>
         <p className="text-lg text-gray-700 max-w-2xl mx-auto">
           Stay updated with our latest collections, exclusive offers, and fashion tips.
         </p>
